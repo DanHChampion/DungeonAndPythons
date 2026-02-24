@@ -11,62 +11,68 @@ WEAPONS = {
         "description": "A corroded dagger that's seen better days.",
         "type": "weapon",
         "subtype": "one_handed",
-        "attack_bonus": 2,
-        "durability": 20,
-        "value": 5,
-        "rarity": "common"
+        "base_stats": {
+            "strength": 2
+        },
+        "accuracy": 0.95,
+        "drop_chance": 0.5,
     },
     "rusty_sword": {
         "name": "Rusty Sword",
         "description": "An old iron sword with rust spots.",
         "type": "weapon",
         "subtype": "one_handed",
-        "attack_bonus": 4,
-        "durability": 30,
-        "value": 15,
-        "rarity": "common"
+        "base_stats": {
+            "strength": 4
+        },
+        "accuracy": 0.95,
+        "drop_chance": 0.5,
     },
     "iron_sword": {
         "name": "Iron Sword",
         "description": "A well-crafted iron blade.",
         "type": "weapon",
         "subtype": "one_handed",
-        "attack_bonus": 8,
-        "durability": 50,
-        "value": 50,
-        "rarity": "common"
+        "base_stats": {
+            "strength": 8
+        },
+        "accuracy": 0.95,
+        "drop_chance": 0.5,
     },
     "steel_sword": {
         "name": "Steel Sword",
         "description": "A sharp steel blade with excellent balance.",
         "type": "weapon",
         "subtype": "one_handed",
-        "attack_bonus": 12,
+        "base_stats": {
+            "strength": 12
+        },
         "durability": 75,
-        "value": 150,
-        "rarity": "uncommon"
+        "drop_chance": 0.25,
     },
     "silver_sword": {
         "name": "Silver Sword",
         "description": "A blessed silver blade effective against undead.",
         "type": "weapon",
         "subtype": "one_handed",
-        "attack_bonus": 10,
+        "base_stats": {
+            "strength": 10
+        },
         "special_effect": "extra_damage_undead",
-        "durability": 60,
-        "value": 200,
-        "rarity": "uncommon"
+        "accuracy": 0.9,
+        "drop_chance": 0.25,
     },
     "enchanted_blade": {
         "name": "Enchanted Blade",
         "description": "A sword humming with magical energy.",
         "type": "weapon",
         "subtype": "one_handed",
-        "attack_bonus": 15,
+        "base_stats": {
+            "strength": 15
+        },
+        "accuracy": 0.95,
         "special_effect": "magic_damage",
-        "durability": 100,
-        "value": 500,
-        "rarity": "rare"
+        "drop_chance": 0.1,
     },
     
     # Two-handed weapons
@@ -75,31 +81,34 @@ WEAPONS = {
         "description": "A heavy two-handed axe for devastating attacks.",
         "type": "weapon",
         "subtype": "two_handed",
-        "attack_bonus": 15,
-        "durability": 60,
-        "value": 80,
-        "rarity": "common"
+        "base_stats": {
+            "strength": 12
+        },
+        "accuracy": 0.8,
+        "drop_chance": 0.5,
     },
     "giant_club": {
         "name": "Giant Club",
         "description": "A massive wooden club that crushes enemies.",
         "type": "weapon",
         "subtype": "two_handed",
-        "attack_bonus": 18,
-        "durability": 40,
-        "value": 60,
-        "rarity": "uncommon"
+        "base_stats": {
+            "strength": 18
+        },
+        "accuracy": 0.8,
+        "drop_chance": 0.25,
     },
     "warhammer": {
         "name": "Warhammer",
         "description": "A mighty hammer that can shatter armor.",
         "type": "weapon",
         "subtype": "two_handed",
-        "attack_bonus": 20,
+        "base_stats": {
+            "strength": 30
+        },
+        "accuracy": 0.8,
         "special_effect": "armor_piercing",
-        "durability": 80,
-        "value": 300,
-        "rarity": "rare"
+        "drop_chance": 0.1,
     },
     
     # Magical weapons
@@ -108,22 +117,26 @@ WEAPONS = {
         "description": "A staff that amplifies magical power.",
         "type": "weapon",
         "subtype": "staff",
-        "attack_bonus": 6,
+        "base_stats": {
+            "strength": 2,
+            "intellect": 5
+        },
+        "accuracy": 0.9,
         "magic_bonus": 10,
-        "durability": 45,
-        "value": 120,
-        "rarity": "uncommon"
+        "drop_chance": 0.25,
     },
     "shadow_blade": {
         "name": "Shadow Blade",
         "description": "A blade forged from crystallized shadows.",
         "type": "weapon",
         "subtype": "one_handed",
-        "attack_bonus": 16,
+        "base_stats": {
+            "strength": 12,
+            "intellect": 16
+        },
+        "accuracy": 0.9,
         "special_effect": "shadow_strike",
-        "durability": 70,
-        "value": 800,
-        "rarity": "legendary"
+        "drop_chance": 0.05,
     }
 }
 
@@ -135,53 +148,50 @@ ARMOR = {
         "description": "Worn and torn clothing that offers little protection.",
         "type": "armor",
         "subtype": "body",
-        "defense_bonus": 1,
-        "durability": 10,
-        "value": 1,
-        "rarity": "common"
+        "base_stats": {
+            "defense": 1
+        },
+        "drop_chance": 0.5
     },
     "leather_armor": {
         "name": "Leather Armor",
         "description": "Flexible leather armor that allows good movement.",
         "type": "armor",
         "subtype": "body",
-        "defense_bonus": 5,
-        "speed_bonus": 1,
-        "durability": 40,
-        "value": 30,
-        "rarity": "common"
+        "base_stats": {
+            "defense": 5
+        },
+        "drop_chance": 0.5
     },
     "chainmail": {
         "name": "Chainmail",
         "description": "Interlocking metal rings that provide solid protection.",
         "type": "armor",
         "subtype": "body",
-        "defense_bonus": 10,
-        "speed_penalty": 1,
-        "durability": 70,
-        "value": 100,
-        "rarity": "common"
+        "base_stats": {
+            "defense": 10
+        },
+        "drop_chance": 0.5
     },
     "plate_armor": {
         "name": "Plate Armor",
         "description": "Heavy metal plates that offer excellent protection.",
         "type": "armor",
         "subtype": "body",
-        "defense_bonus": 20,
-        "speed_penalty": 2,
-        "durability": 100,
-        "value": 400,
-        "rarity": "uncommon"
+        "base_stats": {
+            "defense": 20
+        },
+        "drop_chance": 0.25
     },
     "dragon_scale_armor": {
         "name": "Dragon Scale Armor",
         "description": "Armor crafted from actual dragon scales.",
         "type": "armor",
         "subtype": "body",
-        "defense_bonus": 45,
-        "durability": 150,
-        "value": 2000,
-        "rarity": "legendary"
+        "base_stats": {
+            "defense": 45
+        },
+        "drop_chance": 0.05
     }
 }
 
@@ -192,27 +202,30 @@ ACCESSORIES = {
         "description": "A ring that enhances the wearer's attack.",
         "type": "accessory",
         "subtype": "ring",
-        "attack_bonus": 3,
-        "value": 150,
-        "rarity": "rare"
+        "base_stats": {
+            "strength": 1
+        },
+        "drop_chance": 0.1
     },
     "protection_amulet": {
         "name": "Protection Amulet",
         "description": "An amulet that wards off harm.",
         "type": "accessory",
         "subtype": "amulet",
-        "defense_bonus": 3,
-        "value": 150,
-        "rarity": "rare"
+        "base_stats": {
+            "defense": 3
+        },
+        "drop_chance": 0.1
     },
     "magic_locket": {
         "name": "Magic Locket",
         "description": "A locket that boosts magical abilities.",
         "type": "accessory",
         "subtype": "amulet",
-        "magic_bonus": 5,
-        "value": 200,
-        "rarity": "rare"
+        "base_stats": {
+            "intellect": 5
+        },
+        "drop_chance": 0.1
     }
 }
 
@@ -226,17 +239,7 @@ CONSUMABLES = {
         "effect": "heal",
         "effect_value": 50,
         "value": 25,
-        "rarity": "common"
-    },
-    "mana_potion": {
-        "name": "Mana Potion",
-        "description": "A blue potion that restores magical energy.",
-        "type": "consumable",
-        "subtype": "potion",
-        "effect": "restore_mana",
-        "effect_value": 30,
-        "value": 20,
-        "rarity": "common"
+        "drop_chance": 0.5
     },
     "greater_health_potion": {
         "name": "Greater Health Potion",
@@ -245,17 +248,7 @@ CONSUMABLES = {
         "subtype": "potion",
         "effect": "heal",
         "effect_value": 100,
-        "value": 75,
-        "rarity": "uncommon"
-    },
-    "antidote": {
-        "name": "Antidote",
-        "description": "A green liquid that cures poison.",
-        "type": "consumable",
-        "subtype": "potion",
-        "effect": "cure_poison",
-        "value": 30,
-        "rarity": "common"
+        "drop_chance": 0.25
     }
 }
 

@@ -4,6 +4,8 @@ from classes.item import Item
 from collections import defaultdict
 from classes.player import Player
 from utils import clear_console
+import heapq
+
 
 class Dungeon:
     def __init__(self, player: Player):
@@ -11,6 +13,7 @@ class Dungeon:
         self.map = [[' ' for _ in range(32)] for _ in range(32)]  # Empty 32x32 map
         self.log_messages = []
         self.player = player # Reference to the player object
+        self.enemies = [] # List to keep track of enemies on the current level
 
     def show_current_level(self):
         print(f"{' ' * (32-len(str(self.current_level))//2)}B{self.current_level}")
@@ -38,7 +41,13 @@ class Dungeon:
 
             new_y = self.player.position[0] + dy
             new_x = self.player.position[1] + dx
-            if 0 <= new_y < 32 and 0 <= new_x < 32 and (self.map[new_y][new_x] == '■' or isinstance(self.map[new_y][new_x], Item)):
+            if self.is_in_bounds(new_y, new_x) and self.map[new_y][new_x] == '»':
+                self.map[self.player.position[0]][self.player.position[1]] = '■'
+                self.map[new_y][new_x] = self.player.character
+                self.log_messages.append(f"You descend to B{self.current_level + 1}!")
+                self.generate_level()
+                break
+            elif self.is_walkable(new_y, new_x, is_player=True):
                 # Check if the cell contains an Item instance
                 if isinstance(self.map[new_y][new_x], Item):
                     if len(self.player.inventory) >= 20:
@@ -49,16 +58,14 @@ class Dungeon:
                 self.map[self.player.position[0]][self.player.position[1]] = '■'
                 self.map[new_y][new_x] = self.player.character
                 self.player.position = (new_y, new_x)  # Update player position
-            elif 0 <= new_y < 32 and 0 <= new_x < 32 and self.map[new_y][new_x] == '»':
-                self.map[self.player.position[0]][self.player.position[1]] = '■'
-                self.map[new_y][new_x] = self.player.character
-                self.log_messages.append(f"You descend to B{self.current_level + 1}!")
-                self.generate_level()
-                break
+                self.enemy_turn()
+                if self.player.current_health <= 0:
+                    self.log_messages.append("You have been defeated! Game Over.")
+                    break
             else:
                 self.log_messages.append("You can't move there!")
+                self.enemy_turn()
                 break
-            
         clear_console()
         self.show_current_level()
 
@@ -67,60 +74,123 @@ class Dungeon:
         scan_range = 1
         directions = {
             (-1, 0): "N",
-            (1, 0): "S",
-            (0, -1): "W",
-            (0, 1): "E",
-            (-1, -1): "NW",
             (-1, 1): "NE",
+            (0, 1): "E",
+            (1, 1): "SE",
+            (1, 0): "S",
             (1, -1): "SW",
-            (1, 1): "SE"
+            (0, -1): "W",
+            (-1, -1): "NW"
         }
         for dy in range(-scan_range, scan_range + 1):
             for dx in range(-scan_range, scan_range + 1):
                 scan_y = y + dy
                 scan_x = x + dx
-                if 0 <= scan_y < 32 and 0 <= scan_x < 32:
+                if self.is_in_bounds(scan_y, scan_x):
                     cell = self.map[scan_y][scan_x]
                     direction = directions.get((dy, dx), "")
                     if cell == '»':
                         self.log_messages.append(f"  {direction:2}: Staircase")
                     elif isinstance(cell, Enemy):
-                        self.log_messages.append(f"  {direction:2}: Enemy - {cell.name}[{cell.level}]")
+                        self.log_messages.append(f"  {direction:2}: {cell.name}[{cell.level}] {cell.draw_health_bar()}")
                     elif isinstance(cell, Item):
-                        self.log_messages.append(f"  {direction:2}: Item - {cell.name}[{cell.level}]")
+                        self.log_messages.append(f"  {direction:2}: {cell.name}[{cell.level}]")
                     
         if not self.log_messages:
             self.log_messages.append("Nothing of interest nearby.")
-
-    def drop_item(self, item_idx: str):
-        if not item_idx.isdigit():
-            self.log_messages.append(f"Invalid item index: {item_idx}")
-            return
-        item_idx = int(item_idx) - 1
-        if not 0 <= item_idx < len(self.player.inventory):
-            self.log_messages.append(f"Invalid item index: {item_idx}")
-            return
         
-        item = self.player.inventory[item_idx]
-        y, x = self.player.position
-        # Find a free adjacent square (including diagonals)
-        found = False
-        for dy in [-1, 0, 1]:
-            for dx in [-1, 0, 1]:
-                if dy == 0 and dx == 0:
-                    continue
-                ny, nx = y + dy, x + dx
-                if 0 <= ny < 32 and 0 <= nx < 32 and self.map[ny][nx] == '■':
-                    self.map[ny][nx] = item  # Place the item on the map
-                    self.player.remove_from_inventory(item)
-                    self.log_messages.append(f"You dropped {item.name}[{item.level}] at ({ny},{nx})!")
-                    found = True
-                    break
-            if found:
-                break
-        if not found:
-            self.log_messages.append("No free space next to you to drop the item!")
+    def attack_turn(self, target_dir=''):
+        target: Enemy | None = None
+        direction_map = {
+            'n': (-1, 0),   # N
+            'ne': (-1, 1),  # NE
+            'e': (0, 1),    # E
+            'se': (1, 1),   # SE
+            's': (1, 0),    # S
+            'sw': (1, -1),  # SW
+            'w': (0, -1),   # W
+            'nw': (-1, -1)  # NW
+        }
+        if not (target_dir.lower() in direction_map or target_dir == ''):
+            self.log_messages.append("Invalid attack direction! Use N, S, W, E, NW, NE, SW, SE or leave blank for auto-target.")
+            return
 
+        if target_dir == '':
+            # pick enemy based on orders: N, NE, E, SE, S, SW, W, NW
+            y, x = self.player.position
+            for dy, dx in direction_map.values():
+                scan_y = y + dy
+                scan_x = x + dx
+                if self.is_in_bounds(scan_y, scan_x):
+                    cell = self.map[scan_y][scan_x]
+                    if isinstance(cell, Enemy):
+                        target = cell
+                        self.player.attack(target)
+                        break
+            if target is None:
+                self.log_messages.append("Your attack missed!")
+        else:
+            # Attack the specified direction regardless of what's there
+            y, x = self.player.position
+            dy, dx = direction_map[target_dir.lower()]
+            attack_y = y + dy
+            attack_x = x + dx
+            if not self.is_in_bounds(attack_y, attack_x) or not isinstance(self.map[attack_y][attack_x], Enemy):
+                self.log_messages.append("Your attack missed!")
+                self.enemy_turn()
+                return
+            target = self.map[attack_y][attack_x]
+            self.log_messages.append(f"You attack {target.name}!")
+            self.player.attack(target)
+
+        self.enemy_turn()
+        
+    def enemy_turn(self):
+        for enemy in self.enemies:
+            if enemy.current_health <= 0:
+                self.log_messages.append(f"You defeated {enemy.name}!")
+                # Grant XP
+                self.player.gain_xp(enemy.xp_reward)
+                # Drop loot
+                for item_name in enemy.loot_table:
+                    item = Item(name=item_name, level=1)
+                    if random.random() < item.drop_chance:
+                        self.map[enemy.position[0]][enemy.position[1]] = item
+                        enemy.log_messages.append(f"{enemy.name} dropped {item.name}[{item.level}]!")
+                        break
+                else:
+                    self.map[enemy.position[0]][enemy.position[1]] = '■'
+                self.enemies.remove(enemy)
+                continue
+            # if enemy is adjacent to player, attack
+            if abs(enemy.position[0] - self.player.position[0]) <= 1 and abs(enemy.position[1] - self.player.position[1]) <= 1:
+                enemy.attack(self.player)
+                if self.player.current_health <= 0:
+                    break
+            else:
+                # Move to random adjacent cell if possible
+                directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+                random.shuffle(directions)  # Randomize movement direction
+                for dy, dx in directions:
+                    new_y = enemy.position[0] + dy
+                    new_x = enemy.position[1] + dx
+                    if self.is_walkable(new_y, new_x):
+                        self.map[enemy.position[0]][enemy.position[1]] = '■'
+                        self.map[new_y][new_x] = enemy
+                        enemy.position = (new_y, new_x)
+                        break
+        clear_console()
+        self.show_current_level()
+
+    def is_walkable(self, y, x, is_player=False):
+        """Check if a position is walkable (not a wall or obstacle)"""
+        if not self.is_in_bounds(y, x):
+            return False
+        cell = self.map[y][x]
+        return cell == '■' or (is_player and (isinstance(cell, Item) or cell == '»'))
+    
+    def is_in_bounds(self, y, x):
+        return 0 <= y < 32 and 0 <= x < 32
 
     def generate_level(self):
         self.current_level += 1
@@ -212,7 +282,7 @@ class Dungeon:
 
     def place_player(self, room_cells: list[tuple[int, int]]):
         # Place the player in a random valid cell inside a room (not corridor)
-        player_cells = [(y, x) for (y, x) in room_cells if self.map[y][x] != '»']
+        player_cells = [(y, x) for (y, x) in room_cells if self.is_walkable(y, x)] # Only allow empty floor cells for player start
         if player_cells:
             player_y, player_x = random.choice(player_cells)
             self.map[player_y][player_x] = self.player  # Mark player start
@@ -220,21 +290,25 @@ class Dungeon:
 
     def place_items(self, room_cells: list[tuple[int, int]]):
         # Place items in random valid cells in rooms
-        item_cells = [(y, x) for (y, x) in room_cells if self.map[y][x] == '■' and self.map[y][x] != '»']
-        for _ in range(random.randint(1, 5)):
+        item_cells = [(y, x) for (y, x) in room_cells if self.is_walkable(y, x)]
+        for _ in range(random.randint(5, 10)):
             if not item_cells:
                 break
             item_y, item_x = random.choice(item_cells)
             min_level = max(1, self.current_level // 5)
             max_level = max(min_level, self.current_level // 2)
             random_level = random.randint(min_level, max_level)
-            self.map[item_y][item_x] = Item(level=random_level)  # Mark item
+            item = Item(level=random_level)
+            if random.random() > item.drop_chance:
+                continue
+            self.map[item_y][item_x] = item
             item_cells.remove((item_y, item_x))
     
     def place_enemies(self, room_cells: list[tuple[int, int]]):
         # Place enemies in random valid cells in rooms
-        enemy_cells = [(y, x) for (y, x) in room_cells if self.map[y][x] == '■' and self.map[y][x] != '»']
-        for _ in range(random.randint(1, 5)):
+        self.enemies = []  # Reset enemies list for the new level
+        enemy_cells = [(y, x) for (y, x) in room_cells if self.is_walkable(y, x)]
+        for _ in range(random.randint(5, 10)):
             if not enemy_cells:
                 break
             enemy_y, enemy_x = random.choice(enemy_cells)
@@ -242,5 +316,9 @@ class Dungeon:
             min_level = max(1, self.current_level // 5)
             max_level = max(min_level, self.current_level // 2)
             random_level = random.randint(min_level, max_level)
-            self.map[enemy_y][enemy_x] = Enemy(level=random_level)  # Mark enemy
+            enemy = Enemy(level=random_level, position=(enemy_y, enemy_x))
+            if random.random() > enemy.spawn_chance:
+                continue
+            self.map[enemy_y][enemy_x] = enemy
+            self.enemies.append(enemy)
             enemy_cells.remove((enemy_y, enemy_x))

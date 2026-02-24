@@ -3,164 +3,171 @@ Enemy data for Dungeon & Pythons
 Organized by difficulty tiers for different dungeon levels
 """
 
-# Weak enemies
 WEAK_ENEMIES = {
     "rat": {
         "name": "Rat",
-        "max_health": 15,
         "base_stats": {
+            "health": 15,
             "strength": 3,
             "defense": 0,
             "agility": 3,
             "intellect": 1,
         },
-        "loot_table": [],
-        "exp_reward": 5
+        "loot_table": ["health_potion"],
+        "xp_reward": 5,
+        "spawn_chance": 0.5
     },
     "goblin": {
         "name": "Goblin",
-        "max_health": 25,
         "base_stats": {
+            "health": 25,
             "strength": 6,
             "defense": 1,
             "agility": 6,
             "intellect": 2,
         },
-        "loot_table": [],
-        "exp_reward": 10
+        "loot_table": ["health_potion"],
+        "xp_reward": 10,
+        "spawn_chance": 0.5
     },
     "skeleton": {
         "name": "Skeleton",
-        "max_health": 30,
         "base_stats": {
+            "health": 30,
             "strength": 8,
             "defense": 2,
             "agility": 4,
             "intellect": 1,
         },
-        "loot_table": [],
-        "exp_reward": 15
+        "loot_table": ["health_potion"],
+        "xp_reward": 15,
+        "spawn_chance": 0.5
     },
     "cave_spider": {
         "name": "Cave Spider",
-        "max_health": 20,
-        "attack_power": 5,
         "base_stats": {
+            "health": 20,
             "strength": 5,
             "defense": 1,
             "agility": 10,
             "intellect": 1,
         },
-        "loot_table": [],
-        "exp_reward": 8
+        "loot_table": ["health_potion"],
+        "xp_reward": 8,
+        "spawn_chance": 0.5
     }
 }
 
-# Medium enemies
 MEDIUM_ENEMIES = {
     "orc_warrior": {
         "name": "Orc Warrior",
-        "max_health": 60,
         "base_stats": {
+            "health": 60,
             "strength": 12,
             "defense": 4,
             "agility": 5,
             "intellect": 2,
         },
-        "loot_table": [],
-        "exp_reward": 35
+        "loot_table": ["health_potion"],
+        "xp_reward": 35,
+        "spawn_chance": 0.25
     },
     "dark_mage": {
         "name": "Dark Mage",
-        "max_health": 45,
         "base_stats": {
+            "health": 45,
             "strength": 12,
             "defense": 4,
             "agility": 5,
             "intellect": 2,
         },
-        "loot_table": [],
-        "exp_reward": 50
+        "loot_table": ["health_potion"],
+        "xp_reward": 50,
+        "spawn_chance": 0.25
     },
     "hobgoblin_captain": {
         "name": "Hobgoblin Captain",
-        "max_health": 75,
         "base_stats": {
+            "health": 75,
             "strength": 12,
             "defense": 4,
             "agility": 5,
             "intellect": 2,
         },
-        "loot_table": [],
-        "exp_reward": 60
+        "loot_table": ["health_potion"],
+        "xp_reward": 60,
+        "spawn_chance": 0.25
     },
     "giant_centipede": {
         "name": "Giant Centipede",
-        "max_health": 50,
-       "base_stats": {
+        "base_stats": {
+            "health": 50,
             "strength": 12,
             "defense": 4,
             "agility": 5,
             "intellect": 2,
         },
-        "loot_table": [],
-        "exp_reward": 40
+        "loot_table": ["health_potion"],
+        "xp_reward": 40,
+        "spawn_chance": 0.25
     },
     "minotaur": {
         "name": "Minotaur",
-        "max_health": 90,
         "base_stats": {
+            "health": 90,
             "strength": 12,
             "defense": 4,
             "agility": 5,
             "intellect": 2,
         },
-        "loot_table": [],
-        "exp_reward": 100
+        "loot_table": ["health_potion"],
+        "xp_reward": 100,
+        "spawn_chance": 0.25
     }
 }
-
-# Strong enemies
 STRONG_ENEMIES = {
     "stone_golem": {
         "name": "Stone Golem",
-        "max_health": 150,
         "base_stats": {
+            "health": 150,
             "strength": 20,
             "defense": 15,
             "agility": 2,
             "intellect": 1,
         },
-        "loot_table": [],
-        "exp_reward": 200
+        "loot_table": ["health_potion"],
+        "xp_reward": 200,
+        "spawn_chance": 0.1
     },
     "vampire": {
         "name": "Vampire",
-        "max_health": 120,
         "base_stats": {
+            "health": 120,
             "strength": 20,
             "defense": 5,
             "agility": 10,
             "intellect": 10,
         },
-        "loot_table": [],
-        "exp_reward": 300
+        "loot_table": ["health_potion"],
+        "xp_reward": 300,
+        "spawn_chance": 0.1
     },
     "fire_elemental": {
         "name": "Fire Elemental",
-        "max_health": 100,
         "base_stats": {
+            "health": 100,
             "strength": 20,
             "defense": 15,
             "agility": 2,
             "intellect": 1,
         },
-        "loot_table": [],
-        "exp_reward": 250
+        "loot_table": ["health_potion"],
+        "xp_reward": 250,
+        "spawn_chance": 0.1
     }
 }
 
-# Boss enemies (levels 26+)
+# Boss enemies
 # BOSS_ENEMIES = [
 #     {
 #         "name": "Ancient Dragon",
@@ -171,7 +178,7 @@ STRONG_ENEMIES = {
 #         "speed": 8,
 #         "description": "A colossal dragon with scales like black steel.",
 #         "loot_table": ["dragon_scale", "dragon_heart", "ancient_treasure"],
-#         "exp_reward": 1000
+#         "xp_reward": 1000
 #     },
 #     {
 #         "name": "Lich King",
@@ -182,7 +189,7 @@ STRONG_ENEMIES = {
 #         "speed": 5,
 #         "description": "An undead sorcerer-king of immense power.",
 #         "loot_table": ["phylactery", "lich_crown", "necromantic_tome"],
-#         "exp_reward": 800
+#         "xp_reward": 800
 #     },
 #     {
 #         "name": "Demon Prince",
@@ -193,7 +200,7 @@ STRONG_ENEMIES = {
 #         "speed": 12,
 #         "description": "A hellish prince from the depths of the abyss.",
 #         "loot_table": ["demon_horn", "infernal_essence", "hellfire_gem"],
-#         "exp_reward": 1200
+#         "xp_reward": 1200
 #     },
 #     {
 #         "name": "Kraken",
@@ -204,7 +211,7 @@ STRONG_ENEMIES = {
 #         "speed": 4,
 #         "description": "A massive sea monster dwelling in flooded chambers.",
 #         "loot_table": ["kraken_tentacle", "pearl_of_depths", "leviathan_scale"],
-#         "exp_reward": 1500
+#         "xp_reward": 1500
 #     }
 # ]
 
@@ -219,7 +226,7 @@ STRONG_ENEMIES = {
 #         "speed": 3,
 #         "description": "A chest that's actually a monster in disguise.",
 #         "loot_table": ["mimic_adhesive", "fake_treasure", "real_treasure"],
-#         "exp_reward": 150
+#         "xp_reward": 150
 #     },
 #     {
 #         "name": "Shadow Assassin",
@@ -230,7 +237,7 @@ STRONG_ENEMIES = {
 #         "speed": 15,
 #         "description": "A deadly killer that strikes from the shadows.",
 #         "loot_table": ["shadow_blade", "assassin_garb", "poison_vial"],
-#         "exp_reward": 400
+#         "xp_reward": 400
 #     },
 #     {
 #         "name": "Crystal Guardian",
@@ -241,7 +248,7 @@ STRONG_ENEMIES = {
 #         "speed": 2,
 #         "description": "A magical guardian protecting ancient crystals.",
 #         "loot_table": ["power_crystal", "guardian_core", "crystal_shard"],
-#         "exp_reward": 300
+#         "xp_reward": 300
 #     }
 # ]
 

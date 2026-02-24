@@ -9,7 +9,7 @@ if __name__ == "__main__":
     clear_console()
     game = Game()
     game.start(player_name)
-    while True:
+    while game.is_running:
         command = input(">> ")
         if command.lower() == "exit":
             game.stop()
