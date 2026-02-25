@@ -2,10 +2,14 @@
 
 A command-line dungeon crawler made in Python.
 
+![Screenshot](/screenshot.png)
+
 ## Setup
 
-Required version: Python 3.14
+Supported version: Python 3.14+ *(lower versions should work too)*
+
 `git clone https://github.com/DanHChampion/DungeonAndPythons.git`
+
 `python main.py`
 
 ## Contributing
